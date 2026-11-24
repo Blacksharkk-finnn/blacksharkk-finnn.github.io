@@ -55,10 +55,11 @@ p{margin:0}
 .status .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--faint);margin-right:6px;vertical-align:0}
 .status.open .dot{background:var(--pos);box-shadow:0 0 0 3px rgba(143,209,176,.18)}
 .menu{display:flex;gap:28px;list-style:none;margin:0;padding:0}
-.menu a{font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;display:inline-block;padding:4px 0;border-bottom:1px solid transparent}
+.menu a{white-space:nowrap;font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;display:inline-block;padding:4px 0;border-bottom:1px solid transparent}
 .menu a:hover,.menu a.on{border-color:var(--ink)}
 .mbtn{display:none;background:none;border:1px solid var(--line2);color:var(--ink);font:700 12px var(--mono);letter-spacing:.08em;min-height:40px;padding:0 14px;cursor:pointer}
-@media(max-width:760px){
+@media(max-width:1000px){.menu{gap:18px}}
+@media(max-width:880px){
   .mbtn{display:block}
   .menu{display:none;position:absolute;top:70px;right:max(4vw,18px);left:max(4vw,18px);flex-direction:column;gap:0;background:var(--bg2);border:1px solid var(--line2)}
   .menu.open{display:flex}
