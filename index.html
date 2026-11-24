@@ -97,7 +97,31 @@ p{margin:0}
 .legend{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px;font-size:14px;color:var(--mute)}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
 .note{font-size:13px;color:var(--faint);margin-top:16px}
+.req.dash{width:0;background:none;border-left:2px dashed var(--paper)}
+.dashi{border:2px dashed var(--paper);background:none!important;width:10px!important;height:10px!important}
+.sub{font-size:20px;margin:28px 0 12px}
+.finds{margin:0;padding-left:18px;color:var(--mute)}
+.finds li{padding:5px 0}.finds li::marker{color:var(--mintd)}
+.finds b{color:var(--ink);font-weight:600}
+.wf{display:grid;gap:6px}
+.wr{display:grid;grid-template-columns:minmax(0,10.5em) minmax(0,1fr) 7.5em;gap:10px;align-items:center;font-size:14px;color:var(--mute)}
+.wr .num{text-align:right;color:var(--ink)}
+.tr{position:relative;height:14px;background:var(--bg);border-radius:4px}
+.tr i{position:absolute;top:0;bottom:0;border-radius:3px;background:rgba(255,122,102,.6);transition:left .6s ease,width .6s ease}
+.wr.tot span:first-child{color:var(--ink);font-weight:600}
+.wr.tot .tr i{background:var(--mintd)}
+.heatwrap{margin-top:36px}
+.heat{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px;font-size:14.5px}
+.seg button{white-space:nowrap}
+@media(max-width:420px){.seg button{padding:0 12px}}
+.heat th{white-space:nowrap;font-weight:500;color:var(--faint);text-align:right;padding:6px 10px;font-size:13.5px}
+.heat thead th{text-align:right}
+.heat td{text-align:right;padding:14px 12px;border-radius:8px;border:2px solid transparent}
+.heat td[data-s]{cursor:pointer;border-color:rgba(231,239,233,.25)}
+.heat td.sel{border-color:var(--paper)}
+.scroll{overflow-x:auto}
 @media(max-width:900px){.case{grid-template-columns:1fr}}
+@media(max-width:520px){.wr{grid-template-columns:minmax(0,1fr) 6.5em}.wr .tr{display:none}}
 
 /* more projects */
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:36px}
@@ -202,50 +226,70 @@ footer{padding:28px max(5vw,18px);border-top:1px solid var(--line);color:var(--f
 
   <section class="band" id="work">
     <div class="wrap">
-      <h2>A revolver draw that didn't survive the stress test</h2>
-      <p class="lede">Receivables borrowing-base stress test, credit risk. The question was whether a proposed revolver draw stays supported when receivables deteriorate.</p>
+      <h2>Should the lender fund a $350K revolver draw if collections slow down?</h2>
+      <p class="lede">Receivables borrowing-base stress test in Python. A borrower with a $600,000 revolver balance asks to draw another $350,000 against $2.395M of receivables from 7 debtors. The model works out how much can be lent against those receivables, then tests that figure under stress.</p>
       <div class="case">
         <div>
-          <p style="color:var(--mute)">I modelled a $1.6M receivables borrowing base in Google Sheets across 8 invoices and 6 debtors, applying the eligibility rules a lender would use, then stressed it with 30 extra days of aging and 6% dilution.</p>
-          <div class="terms" aria-label="Borrowing-base terms">
-            <span>85% advance rate</span><span>90-day cutoff</span><span>50% cross-age</span><span>30% concentration cap</span><span>Dilution reserve</span>
+          <p style="color:var(--mute)">Every dollar removed from the base traces back to the invoice and the rule that removed it. I ran three scenarios plus a 4 × 4 grid of aging shift against dilution, with unit tests that check hand-calculated cases.</p>
+          <div class="terms" aria-label="Facility terms">
+            <span>85% advance rate</span><span>90-day cutoff</span><span>50% cross-age rule</span><span>25% concentration limit</span><span>3% dilution reserve</span><span>Affiliate and disputed excluded</span>
           </div>
+          <h3 class="sub">What drives the result</h3>
+          <ul class="finds">
+            <li><b>Aging matters far more than dilution.</b> Going from 3% to 10% dilution costs about $90K of availability; a 15-day slowdown alone costs about $300K.</li>
+            <li><b>One debtor is the cliff.</b> $200K of its invoices are 82 and 87 days old, so 15 more days pushes them past the cutoff, and the cross-age rule then removes its current invoice too.</li>
+            <li><b>One debtor is 42% of gross receivables.</b> The concentration cap already removes about $506K in the base case, the biggest structural risk in the pool.</li>
+          </ul>
           <div class="memo">
             <small>Credit memo recommendation</small>
-            Approve about <b class="num">$85K</b> of the <b class="num">$250K</b> requested draw.
+            Approve <b class="num">$300,000</b> of the <b class="num">$350,000</b> requested, which stays covered under moderate stress. Release the remaining <b class="num">$50,000</b> once the next borrowing-base certificate shows the at-risk invoices collected.
+          </div>
+          <div class="cta" style="margin-top:22px">
+            <a class="btn solid" href="https://github.com/Blacksharkk-finnn/receivables-borrowing-base" target="_blank" rel="noopener">View code on GitHub</a>
+            <a class="btn" href="https://github.com/Blacksharkk-finnn/receivables-borrowing-base/blob/main/docs/credit_memo.md" target="_blank" rel="noopener">Read the credit memo</a>
           </div>
         </div>
         <div class="board">
           <div class="seg" role="group" aria-label="Scenario">
-            <button type="button" id="bBase" aria-pressed="true">Base case</button>
-            <button type="button" id="bStress" aria-pressed="false">Stressed</button>
+            <button type="button" data-s="0" aria-pressed="true">Base case</button>
+            <button type="button" data-s="1" aria-pressed="false">Moderate</button>
+            <button type="button" data-s="2" aria-pressed="false">Severe</button>
           </div>
           <p class="scen" id="scen"></p>
           <div class="big">
             <div><small>Borrowing base</small><b class="num" id="vBase"></b></div>
-            <div><small id="lEx">Excess availability</small><b class="num" id="vEx"></b></div>
+            <div><small>Availability after the $350K draw</small><b class="num" id="vEx"></b></div>
           </div>
           <div class="meter" role="img" id="meter">
             <div class="fill" id="fill"></div>
             <div class="gap" id="gap"></div>
-            <div class="req" id="req"></div>
+            <div class="req" id="mLoan"></div>
+            <div class="req dash" id="mDraw"></div>
           </div>
           <div class="legend">
             <span><i style="background:var(--mintd)"></i>Borrowing base</span>
-            <span><i style="background:var(--paper)"></i>Availability needed, <span class="num">$600,000</span></span>
+            <span><i style="background:var(--paper)"></i>Loan, <span class="num">$600K</span></span>
+            <span><i class="dashi"></i>Loan + draw, <span class="num">$950K</span></span>
             <span><i style="background:var(--coral)"></i>Shortfall</span>
           </div>
-          <p class="note">Figures from my model. Availability needed is the borrowing base less excess availability, the same in both scenarios.</p>
+          <h3 class="sub">From gross receivables to borrowing base</h3>
+          <div class="wf" id="wf"></div>
         </div>
+      </div>
+      <div class="heatwrap">
+        <h3 class="sub">Availability after the draw: aging shift against dilution</h3>
+        <div class="scroll"><table class="heat" id="heat"></table></div>
+        <p class="note">The three scenarios are outlined. The company, debtors and invoices are fictional, made up for this project.</p>
       </div>
 
       <div class="grid2">
         <article class="proj">
           <span class="status">Completed</span>
           <h3>Portfolio optimisation with Modern Portfolio Theory</h3>
-          <p>Built an optimal investment portfolio with quantitative finance principles: minimised risk for a target return through asset allocation, covariance analysis and Sharpe ratio optimisation.</p>
+          <p>Built an optimal investment portfolio with quantitative finance principles: minimised risk for a target return through asset allocation, covariance analysis and Sharpe ratio optimisation. In Python, it simulates 50,000 random portfolios of four large-cap US stocks to trace the efficient frontier and find the maximum-Sharpe portfolio.</p>
           <div class="fig" id="frontier" role="img" aria-label="Concept sketch of an efficient frontier with the maximum Sharpe ratio portfolio where the capital market line touches it"></div>
           <p class="note" style="margin-top:0">Concept sketch of the method, not project output.</p>
+          <a class="btn" style="align-self:flex-start" href="https://github.com/Blacksharkk-finnn/modern-portfolio-theory-" target="_blank" rel="noopener">View code on GitHub</a>
         </article>
         <article class="proj">
           <span class="status dev">In development</span>
@@ -343,31 +387,51 @@ footer{padding:28px max(5vw,18px);border-top:1px solid var(--line);color:var(--f
   $('yr').textContent=new Date().getFullYear();
 
   /* ---------- stress test ---------- */
-  const NEED=600000, MAX=900000;
-  const S={
-    base:{base:839960,ex:239960,txt:'Current aging and dilution.'},
-    stress:{base:537200,ex:-62800,txt:'Aging pushed out 30 days, dilution at 6%.'}
-  };
+  const LOAN=600000,DRAW=350000,MAX=1300000,GROSS=2395000;
+  const SC=[
+    {txt:'No aging shift, 3% dilution.',a:0,d:0,w:[120000,220000,40000,506250,1508750,45262,219523,1243964],av:293964},
+    {txt:'Invoices 15 days older, 5% dilution.',a:1,d:1,w:[120000,630000,90000,411250,1143750,57188,162984,923578],av:-26422},
+    {txt:'Invoices 30 days older, 7% dilution.',a:2,d:2,w:[120000,850000,135000,505000,785000,54950,109508,620542],av:-329458}
+  ];
+  const GRID=[[293964,268316,242667,204194],[-6978,-26422,-45866,-75031],[-302768,-316112,-329458,-349475],[-785100,-788500,-791900,-797000]];
   const fmt=n=>(n<0?'−':'')+'$'+Math.abs(n).toLocaleString('en-US');
-  const show=k=>{
-    const s=S[k];
-    $('bBase').setAttribute('aria-pressed',k==='base');$('bStress').setAttribute('aria-pressed',k==='stress');
+  const steps=['Excluded categories','Over 90 days','Cross-aged debtors','Concentration cap','Net eligible','Dilution reserve','Advance-rate haircut','Borrowing base'];
+  const pc=v=>(v/GROSS*100).toFixed(2)+'%';
+  const btns=[...document.querySelectorAll('.seg [data-s]')];
+  const show=i=>{
+    const s=SC[i],base=s.w[7];
+    btns.forEach((b,j)=>b.setAttribute('aria-pressed',j===i));
     $('scen').textContent=s.txt;
-    $('vBase').textContent=fmt(s.base);
-    $('vEx').textContent=fmt(s.ex);
-    $('vEx').className='num '+(s.ex<0?'neg':'pos');
-    $('lEx').textContent=s.ex<0?'Shortfall against the draw':'Excess availability';
-    const pb=s.base/MAX*100,pn=NEED/MAX*100;
+    $('vBase').textContent=fmt(base);
+    $('vEx').textContent=fmt(s.av);
+    $('vEx').className='num '+(s.av<0?'neg':'pos');
+    const pb=base/MAX*100,pl=LOAN/MAX*100,pd=(LOAN+DRAW)/MAX*100;
     $('fill').style.width=pb+'%';
-    $('fill').classList.toggle('short',s.ex<0);
-    $('req').style.left='calc('+pn+'% - 1px)';
+    $('mLoan').style.left='calc('+pl+'% - 1px)';
+    $('mDraw').style.left='calc('+pd+'% - 1px)';
     const g=$('gap');
-    if(s.ex<0){g.style.left=pb+'%';g.style.width=(pn-pb)+'%'}else{g.style.left=pn+'%';g.style.width='0%'}
-    $('meter').setAttribute('aria-label',`Borrowing base ${fmt(s.base)} against ${fmt(NEED)} needed: ${s.ex<0?'shortfall':'excess'} of ${fmt(Math.abs(s.ex))}`);
+    if(base<LOAN+DRAW){g.style.left=pb+'%';g.style.width=(pd-pb)+'%'}else{g.style.left=pd+'%';g.style.width='0%'}
+    $('meter').setAttribute('aria-label',`Borrowing base ${fmt(base)} against ${fmt(LOAN+DRAW)} of loan plus draw: availability ${fmt(s.av)}`);
+    let run=GROSS,rows=`<div class="wr tot"><span>Gross receivables</span><span class="tr"><i style="left:0;width:100%"></i></span><span class="num">${fmt(GROSS)}</span></div>`;
+    s.w.forEach((v,k)=>{
+      if(k===4||k===7){run=v;rows+=`<div class="wr tot"><span>${steps[k]}</span><span class="tr"><i style="left:0;width:${pc(v)}"></i></span><span class="num">${fmt(v)}</span></div>`}
+      else{run-=v;rows+=`<div class="wr"><span>${steps[k]}</span><span class="tr"><i style="left:${pc(run)};width:${pc(v)}"></i></span><span class="num">−${fmt(v)}</span></div>`}
+    });
+    $('wf').innerHTML=rows;
+    document.querySelectorAll('#heat td').forEach(c=>c.classList.toggle('sel',+c.dataset.a===s.a&&+c.dataset.d===s.d));
   };
-  $('bBase').addEventListener('click',()=>show('base'));
-  $('bStress').addEventListener('click',()=>show('stress'));
-  show('base');
+  const sel=[[0,0],[1,1],[2,2]];
+  $('heat').innerHTML='<thead><tr><th>Aging shift</th>'+['3%','5%','7%','10%'].map(d=>`<th>${d} dilution</th>`).join('')+'</tr></thead><tbody>'+
+    GRID.map((r,a)=>`<tr><th>+${a*15} days</th>`+r.map((v,d)=>{
+      const bg=v>=0?`rgba(95,174,140,${(.25+v/300000*.5).toFixed(2)})`:`rgba(255,122,102,${(.15+Math.min(1,-v/800000)*.55).toFixed(2)})`;
+      const si=sel.findIndex(p=>p[0]===a&&p[1]===d);
+      return `<td data-a="${a}" data-d="${d}" style="background:${bg}"${si>=0?` data-s="${si}" tabindex="0" role="button" aria-label="Show ${['base case','moderate','severe'][si]} scenario"`:''}><span class="num">${fmt(v)}</span></td>`}).join('')+'</tr>').join('')+'</tbody>';
+  btns.forEach(b=>b.addEventListener('click',()=>show(+b.dataset.s)));
+  document.querySelectorAll('#heat td[data-s]').forEach(c=>{
+    c.addEventListener('click',()=>show(+c.dataset.s));
+    c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show(+c.dataset.s)}});
+  });
+  show(0);
 
   /* ---------- guilloche rosette ---------- */
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
