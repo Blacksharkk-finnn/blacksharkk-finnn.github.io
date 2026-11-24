@@ -81,10 +81,11 @@ section{position:relative;z-index:2}
 .hero h1{font-size:clamp(42px,7.2vw,108px);margin:18px 0 28px}
 .plates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:0}
 .plate{position:relative;aspect-ratio:4/3.4;overflow:hidden;background:#2a2a28}
-.plate img,.card .img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) contrast(1.08) brightness(.92);scale:var(--sc,1);translate:0 var(--py,0px);transition:scale 1.6s cubic-bezier(.2,.8,.2,1)}
-.plate img{top:-9%;height:118%}
+.plate img,.card .img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;scale:var(--sc,1);transition:scale 1s cubic-bezier(.2,.8,.2,1);backface-visibility:hidden}
+.plate img{top:-9%;height:118%;will-change:translate,scale}
+#heroTitle{will-change:transform,opacity}
 .plate:hover img,.card:hover .img img{--sc:1.04}
-.card .img img{filter:grayscale(1) contrast(1.05) brightness(.8)}
+
 .plate .tag{position:absolute;left:12px;bottom:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:rgba(235,230,220,.75);text-transform:uppercase}
 .heroinfo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;margin-top:56px;align-items:end}
 .heroinfo p{font-size:clamp(19px,2vw,24px);line-height:1.35;max-width:30ch;font-weight:500}
@@ -206,18 +207,18 @@ section{position:relative;z-index:2}
 @keyframes rise{to{opacity:1;transform:none}}
 /* scroll motion (only when .js is set, i.e. motion allowed) */
 .prog{position:fixed;top:0;left:0;right:0;height:2px;background:var(--ink);transform-origin:left;transform:scaleX(0);z-index:40;pointer-events:none}
-.js .rv{opacity:0;transform:translateY(38px);transition:opacity .9s cubic-bezier(.2,.8,.2,1) var(--d,0s),transform .9s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
+.js .rv{opacity:0;transform:translateY(22px);transition:opacity .6s cubic-bezier(.2,.8,.2,1) var(--d,0s),transform .6s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
 .js .rv.in{opacity:1;transform:none}
 .js .sechead{border-bottom-color:transparent;position:relative}
-.js .sechead::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--line2);transform:scaleX(0);transform-origin:left;transition:transform 1.3s cubic-bezier(.7,0,.2,1) .15s}
+.js .sechead::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--line2);transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.7,0,.2,1)}
 .js .sechead.in::after{transform:none}
-.js .wipe{clip-path:inset(100% 0 0 0);transition:clip-path 1.3s cubic-bezier(.7,0,.2,1) var(--d,0s)}
+.js .wipe{clip-path:inset(100% 0 0 0);transition:clip-path .85s cubic-bezier(.65,0,.25,1) var(--d,0s)}
 .js .wipe.in{clip-path:inset(0)}
-.js .wipe img{--sc:1.2;transition:scale 1.9s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
+.js .wipe img{--sc:1.12;transition:scale 1.2s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
 .js .wipe.in img{--sc:1}
 .js .plate.wipe.in:hover img,.js .card:hover .wipe.in img{--sc:1.04;transition-delay:0s}
 .js .split .w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .02em .08em;margin:0 -.02em -.08em}
-.js .split .w>span{display:inline-block;transform:translateY(108%);transition:transform 1.05s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
+.js .split .w>span{display:inline-block;transform:translateY(108%);transition:transform .75s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
 .js .split.in .w>span{transform:none}
 .js .heat .rv{transform:translateY(14px) scale(.96)}
 .js .heat .rv.in{transform:none}
@@ -255,8 +256,8 @@ section{position:relative;z-index:2}
       <p class="label rise">*Finance domain expert at Mercor</p>
       <h1 class="mega" id="heroTitle">Credit risk.<br>Market risk.<br>Valuation.</h1>
       <div class="plates">
-        <div class="plate"><img src="https://images.unsplash.com/photo-1518725414153-3d119aad7e76?auto=format&fit=crop&q=75&w=1400&h=1190" srcset="https://images.unsplash.com/photo-1518725414153-3d119aad7e76?auto=format&fit=crop&q=75&w=700&h=595 700w, https://images.unsplash.com/photo-1518725414153-3d119aad7e76?auto=format&fit=crop&q=75&w=1400&h=1190 1400w" sizes="(max-width:760px) 92vw, 46vw" width="1400" height="1190" alt="Looking up at glass office towers" fetchpriority="high" decoding="async"></div>
-        <div class="plate"><img src="https://images.unsplash.com/photo-1650636187799-0a09fbbd01af?auto=format&fit=crop&q=75&w=1400&h=1190" srcset="https://images.unsplash.com/photo-1650636187799-0a09fbbd01af?auto=format&fit=crop&q=75&w=700&h=595 700w, https://images.unsplash.com/photo-1650636187799-0a09fbbd01af?auto=format&fit=crop&q=75&w=1400&h=1190 1400w" sizes="(max-width:760px) 92vw, 46vw" width="1400" height="1190" alt="Two skyscrapers against a cloudy sky" fetchpriority="high" decoding="async"></div>
+        <div class="plate"><img src="https://images.unsplash.com/photo-1518725414153-3d119aad7e76?auto=format&fit=crop&q=75&w=1400&h=1190&sat=-100&con=12&bri=-4" srcset="https://images.unsplash.com/photo-1518725414153-3d119aad7e76?auto=format&fit=crop&q=75&w=700&h=595&sat=-100&con=12&bri=-4 700w, https://images.unsplash.com/photo-1518725414153-3d119aad7e76?auto=format&fit=crop&q=75&w=1400&h=1190&sat=-100&con=12&bri=-4 1400w" sizes="(max-width:760px) 92vw, 46vw" width="1400" height="1190" alt="Looking up at glass office towers" fetchpriority="high" decoding="async"></div>
+        <div class="plate"><img src="https://images.unsplash.com/photo-1650636187799-0a09fbbd01af?auto=format&fit=crop&q=75&w=1400&h=1190&sat=-100&con=12&bri=-4" srcset="https://images.unsplash.com/photo-1650636187799-0a09fbbd01af?auto=format&fit=crop&q=75&w=700&h=595&sat=-100&con=12&bri=-4 700w, https://images.unsplash.com/photo-1650636187799-0a09fbbd01af?auto=format&fit=crop&q=75&w=1400&h=1190&sat=-100&con=12&bri=-4 1400w" sizes="(max-width:760px) 92vw, 46vw" width="1400" height="1190" alt="Two skyscrapers against a cloudy sky" fetchpriority="high" decoding="async"></div>
       </div>
       <div class="heroinfo">
         <div>
@@ -279,7 +280,7 @@ section{position:relative;z-index:2}
       <div class="sechead"><span class="label">*Selected work</span><span class="label">4 files</span></div>
       <div class="cards">
         <article class="card">
-          <div class="img"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=75&w=1200&h=750" srcset="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=75&w=600&h=375 600w, https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=75&w=1200&h=750 1200w" sizes="(max-width:760px) 92vw, 46vw" width="1200" height="750" alt="Financial papers, a pen and a calculator on a desk" loading="lazy" decoding="async"></div>
+          <div class="img"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=75&w=1200&h=750&sat=-100&con=12&bri=-14" srcset="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=75&w=600&h=375&sat=-100&con=12&bri=-14 600w, https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=75&w=1200&h=750&sat=-100&con=12&bri=-14 1200w" sizes="(max-width:760px) 92vw, 46vw" width="1200" height="750" alt="Financial papers, a pen and a calculator on a desk" loading="lazy" decoding="async"></div>
           <div class="meta mono"><span class="mute">Credit risk / Python</span><span class="num">$2.395M pool</span></div>
           <h3>Borrowing-base stress test</h3>
           <p>How much an asset-based lender can advance against receivables, and whether a $350K revolver draw holds up when collections slow and dilution rises.</p>
@@ -289,7 +290,7 @@ section{position:relative;z-index:2}
           </div>
         </article>
         <article class="card">
-          <div class="img"><img src="https://images.unsplash.com/photo-1767424412548-1a1ac7f4b9bc?auto=format&fit=crop&q=75&w=1200&h=750" srcset="https://images.unsplash.com/photo-1767424412548-1a1ac7f4b9bc?auto=format&fit=crop&q=75&w=600&h=375 600w, https://images.unsplash.com/photo-1767424412548-1a1ac7f4b9bc?auto=format&fit=crop&q=75&w=1200&h=750 1200w" sizes="(max-width:760px) 92vw, 46vw" width="1200" height="750" alt="Trading charts on screens and a tablet" loading="lazy" decoding="async"></div>
+          <div class="img"><img src="https://images.unsplash.com/photo-1767424412548-1a1ac7f4b9bc?auto=format&fit=crop&q=75&w=1200&h=750&sat=-100&con=12&bri=-14" srcset="https://images.unsplash.com/photo-1767424412548-1a1ac7f4b9bc?auto=format&fit=crop&q=75&w=600&h=375&sat=-100&con=12&bri=-14 600w, https://images.unsplash.com/photo-1767424412548-1a1ac7f4b9bc?auto=format&fit=crop&q=75&w=1200&h=750&sat=-100&con=12&bri=-14 1200w" sizes="(max-width:760px) 92vw, 46vw" width="1200" height="750" alt="Trading charts on screens and a tablet" loading="lazy" decoding="async"></div>
           <div class="meta mono"><span class="mute">Portfolio / Python</span><span class="num">50,000 portfolios</span></div>
           <h3>Modern Portfolio Theory</h3>
           <p>Minimised risk for a target return through asset allocation, covariance analysis and Sharpe ratio optimisation, simulating 50,000 random portfolios of four large-cap US stocks to find the maximum-Sharpe mix.</p>
@@ -298,13 +299,13 @@ section{position:relative;z-index:2}
           </div>
         </article>
         <article class="card">
-          <div class="img"><img src="https://images.unsplash.com/photo-1649003515353-c58a239cf662?auto=format&fit=crop&q=75&w=1200&h=750" srcset="https://images.unsplash.com/photo-1649003515353-c58a239cf662?auto=format&fit=crop&q=75&w=600&h=375 600w, https://images.unsplash.com/photo-1649003515353-c58a239cf662?auto=format&fit=crop&q=75&w=1200&h=750 1200w" sizes="(max-width:760px) 92vw, 46vw" width="1200" height="750" alt="Candlestick price chart on a dark trading screen" loading="lazy" decoding="async"></div>
+          <div class="img"><img src="https://images.unsplash.com/photo-1649003515353-c58a239cf662?auto=format&fit=crop&q=75&w=1200&h=750&sat=-100&con=12&bri=-14" srcset="https://images.unsplash.com/photo-1649003515353-c58a239cf662?auto=format&fit=crop&q=75&w=600&h=375&sat=-100&con=12&bri=-14 600w, https://images.unsplash.com/photo-1649003515353-c58a239cf662?auto=format&fit=crop&q=75&w=1200&h=750&sat=-100&con=12&bri=-14 1200w" sizes="(max-width:760px) 92vw, 46vw" width="1200" height="750" alt="Candlestick price chart on a dark trading screen" loading="lazy" decoding="async"></div>
           <div class="meta mono"><span class="mute">Market risk</span><span class="dev">In development</span></div>
           <h3>VaR backtest</h3>
           <p>Backtesting a value-at-risk model against realised P&amp;L with the Basel traffic-light framework, the Kupiec test and expected shortfall.</p>
         </article>
         <article class="card">
-          <div class="img"><img src="https://images.unsplash.com/photo-1709534486708-fb8f94150d0a?auto=format&fit=crop&q=75&w=1200&h=750" srcset="https://images.unsplash.com/photo-1709534486708-fb8f94150d0a?auto=format&fit=crop&q=75&w=600&h=375 600w, https://images.unsplash.com/photo-1709534486708-fb8f94150d0a?auto=format&fit=crop&q=75&w=1200&h=750 1200w" sizes="(max-width:760px) 92vw, 46vw" width="1200" height="750" alt="Calculator on printed financial reports" loading="lazy" decoding="async"></div>
+          <div class="img"><img src="https://images.unsplash.com/photo-1709534486708-fb8f94150d0a?auto=format&fit=crop&q=75&w=1200&h=750&sat=-100&con=12&bri=-14" srcset="https://images.unsplash.com/photo-1709534486708-fb8f94150d0a?auto=format&fit=crop&q=75&w=600&h=375&sat=-100&con=12&bri=-14 600w, https://images.unsplash.com/photo-1709534486708-fb8f94150d0a?auto=format&fit=crop&q=75&w=1200&h=750&sat=-100&con=12&bri=-14 1200w" sizes="(max-width:760px) 92vw, 46vw" width="1200" height="750" alt="Calculator on printed financial reports" loading="lazy" decoding="async"></div>
           <div class="meta mono"><span class="mute">Valuation</span><span class="dev">In development</span></div>
           <h3>DCF valuation model</h3>
           <p>A full valuation model to estimate a company's intrinsic value, structured from free cash flow forecasts through the discount rate to enterprise value.</p>
@@ -478,7 +479,7 @@ section{position:relative;z-index:2}
   const countTo=(el,to)=>{
     const from=+(el.dataset.v||0);el.dataset.v=to;
     if(!MOTION||from===to){el.textContent=fmt(to);return}
-    const t0=performance.now(),D=900;
+    const t0=performance.now(),D=650;
     const step=t=>{const k=Math.min(1,(t-t0)/D),e=1-(1-k)**3;el.textContent=fmt(Math.round(from+(to-from)*e));if(k<1&&+el.dataset.v===to)requestAnimationFrame(step)};
     requestAnimationFrame(step);
   };
@@ -513,7 +514,7 @@ section{position:relative;z-index:2}
   });
   if(MOTION&&'IntersectionObserver' in window){
     $('vBase').textContent=fmt(0);$('vEx').textContent=fmt(0);
-    const bo=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){bo.disconnect();show(0)}},{threshold:.35});
+    const bo=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){bo.disconnect();show(0)}},{threshold:.15});
     bo.observe(document.querySelector('.board'));
   } else show(0);
 
@@ -540,34 +541,34 @@ section{position:relative;z-index:2}
     Q('.mega').forEach(h=>{
       let k=0;const out=[];
       h.childNodes.forEach(n=>{
-        if(n.nodeType===3)n.textContent.split(/(\s+)/).forEach(w=>{if(!w)return;if(/^\s+$/.test(w))out.push(' ');else{const o=document.createElement('span');o.className='w';const i=document.createElement('span');i.textContent=w;i.style.setProperty('--d',(k++*0.07).toFixed(2)+'s');o.appendChild(i);out.push(o)}});
+        if(n.nodeType===3)n.textContent.split(/(\s+)/).forEach(w=>{if(!w)return;if(/^\s+$/.test(w))out.push(' ');else{const o=document.createElement('span');o.className='w';const i=document.createElement('span');i.textContent=w;i.style.setProperty('--d',(k++*0.045).toFixed(3)+'s');o.appendChild(i);out.push(o)}});
         else out.push(n.cloneNode(true));
       });
       h.textContent='';out.forEach(n=>h.append(n));h.classList.add('split');
     });
     tag(Q('.sechead'),'rv');
-    tag(Q('.plate'),'wipe',.15,.35);
+    tag(Q('.plate'),'wipe',.1,.15);
     Q('.card .img').forEach(el=>el.classList.add('wipe'));
-    Q('.cards').forEach(g=>tag(Q(':scope>.card',g),'rv',.12));
-    tag(Q('.heroinfo>*'),'rv',.12,.5);
-    tag(Q('.case>div:first-child>*:not(h2)'),'rv',.08);
+    Q('.cards').forEach(g=>tag(Q(':scope>.card',g),'rv',.08));
+    tag(Q('.heroinfo>*'),'rv',.08,.25);
+    tag(Q('.case>div:first-child>*:not(h2)'),'rv',.05);
     tag(Q('.board'),'rv',0,.1);
-    tag(Q('.row'),'rv',.05);
-    tag(Q('.ledger>.col'),'rv',.1);
+    tag(Q('.row'),'rv',0);
+    tag(Q('.ledger>.col'),'rv',.06);
     tag(Q('.contact>*'),'rv',.12);
     tag(Q('.fine,.foot .label'),'rv');
-    tag(Q('.heat th,.heat td'),'rv',.025);
+    tag(Q('.heat th,.heat td'),'rv',.012);
     const seen=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;
       const el=e.target;el.classList.add('in');Q('.wipe',el).forEach(w=>w.classList.add('in'));
       if(el.id==='heat')Q('.rv',el).forEach(c=>c.classList.add('in'));
-      seen.unobserve(el)}),{rootMargin:'0px 0px -48px 0px',threshold:0});
+      seen.unobserve(el)}),{rootMargin:'0px 0px 0px 0px',threshold:0});
     Q('.rv:not(.heat .rv),.plates,.split,.card').forEach(el=>seen.observe(el));
     seen.observe($('heat'));
     // hero parallax + progress bar
     const plates=Q('.plate img'),ht=$('heroTitle');let ticking=false;
     const onScroll=()=>{ticking=false;const y=scrollY,h=innerHeight;
       prog.style.transform='scaleX('+Math.min(1,y/Math.max(1,document.documentElement.scrollHeight-h))+')';
-      if(y<h*1.6){plates.forEach((im,k)=>im.style.setProperty('--py',(y*(k?.09:.05)).toFixed(1)+'px'));ht.style.transform='translateY('+(y*.18).toFixed(1)+'px)';ht.style.opacity=Math.max(.15,1-y/(h*.9)).toFixed(3)}};
+      if(y<h*1.4){plates.forEach((im,k)=>{im.style.translate='0 '+(y*(k?.08:.045)).toFixed(1)+'px'});ht.style.transform='translate3d(0,'+(y*.16).toFixed(1)+'px,0)';ht.style.opacity=Math.max(.15,1-y/(h*.9)).toFixed(3)}};
     addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(onScroll)}},{passive:true});
     onScroll();
   } else prog.remove();
