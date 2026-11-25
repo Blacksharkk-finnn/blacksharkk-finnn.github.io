@@ -221,6 +221,11 @@ section{position:relative;z-index:2}
 .js .split .w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .02em .08em;margin:0 -.02em -.08em}
 .js .split .w>span{display:inline-block;transform:translateY(108%);transition:transform .75s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
 .js .split.in .w>span{transform:none}
+/* re-entering from above (scrolling back up): mirror each reveal */
+.js .rv.from-top:not(.in){transform:translateY(-22px)}
+.js .heat .rv.from-top:not(.in){transform:translateY(-14px) scale(.96)}
+.js .split.from-top:not(.in) .w>span{transform:translateY(-108%)}
+.js .wipe.from-top:not(.in){clip-path:inset(0 0 100% 0)}
 .js .heat .rv{transform:translateY(14px) scale(.96)}
 .js .heat .rv.in{transform:none}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rise{animation:none;opacity:1;transform:none}.ticker .t{animation:none}.fill,.gap,.tr i{transition:none}}
@@ -484,8 +489,9 @@ section{position:relative;z-index:2}
     const step=t=>{const k=Math.min(1,(t-t0)/D),e=1-(1-k)**3;el.textContent=fmt(Math.round(from+(to-from)*e));if(k<1&&+el.dataset.v===to)requestAnimationFrame(step)};
     requestAnimationFrame(step);
   };
+  let cur=0;
   const show=i=>{
-    const s=SC[i],base=s.w[7];
+    cur=i;const s=SC[i],base=s.w[7];
     btns.forEach((b,j)=>b.setAttribute('aria-pressed',j===i));
     $('scen').textContent=s.txt;
     countTo($('vBase'),base);
@@ -515,7 +521,10 @@ section{position:relative;z-index:2}
   });
   if(MOTION&&'IntersectionObserver' in window){
     $('vBase').textContent=fmt(0);$('vEx').textContent=fmt(0);
-    const bo=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){bo.disconnect();show(0)}},{threshold:.15});
+    const bo=new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.isIntersecting)show(cur);
+      else{['vBase','vEx'].forEach(id=>{$(id).dataset.v=0;$(id).textContent=fmt(0)})}
+    }),{threshold:.15});
     bo.observe(document.querySelector('.board'));
   } else show(0);
 
@@ -559,10 +568,12 @@ section{position:relative;z-index:2}
     tag(Q('.contact>*'),'rv',.12);
     tag(Q('.fine,.foot .label'),'rv');
     tag(Q('.heat th,.heat td'),'rv',.012);
-    const seen=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;
-      const el=e.target;el.classList.add('in');Q('.wipe',el).forEach(w=>w.classList.add('in'));
-      if(el.id==='heat')Q('.rv',el).forEach(c=>c.classList.add('in'));
-      seen.unobserve(el)}),{rootMargin:'0px 0px 0px 0px',threshold:0});
+    // reveal on entry, reset on exit, so it replays in both scroll directions
+    const seen=new IntersectionObserver(es=>es.forEach(e=>{
+      const el=e.target,group=[el,...Q('.wipe',el),...(el.id==='heat'?Q('.rv',el):[])];
+      if(e.isIntersecting){group.forEach(g=>g.classList.add('in'))}
+      else{const above=e.boundingClientRect.top<0;group.forEach(g=>{g.classList.remove('in');g.classList.toggle('from-top',above)})}
+    }),{rootMargin:'0px',threshold:0});
     Q('.rv:not(.heat .rv),.plates,.split,.card').forEach(el=>seen.observe(el));
     seen.observe($('heat'));
     // hero parallax + progress bar
